@@ -1,13 +1,14 @@
-import { lastItem } from './array/lastItem'
-import { remove } from './array/remove'
-import { Card } from './Card'
-import { Color } from './Color'
-import { values } from './enum/values'
-import { Player } from './Player'
-import { shuffle } from './shuffle/shuffle'
-import { Symbol } from './Symbol'
+import { lastItem } from './array/lastItem.js'
+import { remove } from './array/remove.js'
+import { Card } from './Card.js'
+import { Color } from './Color.js'
+import { values } from './enum/values.js'
+import { Player } from './Player.js'
+import { shuffle } from './shuffle/shuffle.js'
+import { Symbol } from './Symbol.js'
 
 export class Game {
+  static NUMBER_OF_CARDS_WHEN_TO_SAY_DUO = 2
   static NUMBER_OF_CARDS_TO_DRAW = 2
 
   players: Player[]
@@ -61,7 +62,6 @@ export class Game {
   }
 
   start() {
-    console.log(this.players[0].cards)
     this.players[0].notifyOnceTurn()
   }
 
@@ -86,6 +86,7 @@ export class Game {
   playCard(card: Card) {
     if (this.isCardPlayable(card)) {
       remove(this.currentPlayer.cards, card)
+      this.playedCards.push(card)
       this._hasCurrentPlayerPlayedACard = true
     } else {
       throw new Error('Card must have same symbol or color.')
@@ -102,21 +103,34 @@ export class Game {
     }
 
     if (
-      this.currentPlayer.cards.length === Game.NUMBER_OF_CARDS_TO_DRAW &&
+      this.currentPlayer.cards.length === Game.NUMBER_OF_CARDS_WHEN_TO_SAY_DUO &&
       !this.hasCurrentPlayerSayedDuo
     ) {
       this.currentPlayer.cards.push(
-        new Card(Symbol.One, Color.Red),
-        new Card(Symbol.Two, Color.Red),
+        this.deck.pop()!,
+        this.deck.pop()!,
       )
     }
 
     if (this.currentPlayer.cards.length === 0) {
       this.winner = this.currentPlayer
     } else {
-      this._hasCurrentPlayerSayedDuo = false
-      this._currentPlayerIndex = (this._currentPlayerIndex + 1) % this.players.length
+      this._nextPlayer()
+
+      if (lastItem(this.playedCards).symbol === Symbol.DrawTwo) {
+        for (let count = 1; count <= 2; count++) {
+          const card = this.deck.pop()!
+          this.currentPlayer.cards.push(card)
+        }
+        this._nextPlayer()
+      }
     }
+  }
+
+  private _nextPlayer() {
+    this._currentPlayerIndex = (this._currentPlayerIndex + 1) % this.players.length
+    this._hasCurrentPlayerPlayedACard = false
+    this._hasCurrentPlayerSayedDuo = false
   }
 
   drawCard() {

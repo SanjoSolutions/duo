@@ -1,15 +1,16 @@
 import Mock = jest.Mock
 
-jest.mock('./shuffle/shuffle')
+jest.mock('./shuffle/shuffle.js')
 
-import { lastItem } from './array/lastItem'
-import { Card } from './Card'
-import { Color } from './Color'
-import { identity } from './function/identity'
-import { Game } from './Game'
-import { Player } from './Player'
-import { shuffle } from './shuffle/shuffle'
-import { Symbol } from './Symbol'
+import { item } from './array/item.js'
+import { lastItem } from './array/lastItem.js'
+import { Card } from './Card.js'
+import { Color } from './Color.js'
+import { identity } from './function/identity.js'
+import { Game } from './Game.js'
+import { Player } from './Player.js'
+import { shuffle } from './shuffle/shuffle.js'
+import { Symbol } from './Symbol.js'
 
 describe('duo', () => {
   beforeEach(() => {
@@ -80,6 +81,15 @@ describe('duo', () => {
       },
     )
 
+    test('the played card is added to playedCards', () => {
+      const { game, players } = createGameWithTwoPlayers()
+      game.playedCards.push(new Card(Symbol.Two, Color.Red))
+      const card = new Card(Symbol.Two, Color.Green)
+      players[0].cards.push(card)
+      players[0].playCard(players[0].cards[0])
+      expect(lastItem(game.playedCards)).toBe(card)
+    })
+
     describe('when the deck has 0 cards left', () => {
       let game: Game
       let playedCard: Card
@@ -102,6 +112,21 @@ describe('duo', () => {
 
       test('the played cards are reset', () => {
         expect(game.playedCards).toHaveLength(0)
+      })
+    })
+
+    describe('playing a "draw two" card', () => {
+      test('the next player draws two cards and then the turn ends for the player who draws two cards', () => {
+        const { game, players } = createGameWithTwoPlayers()
+        game.initialize()
+        expect(players[0].cards[1].symbol).toEqual(Symbol.DrawTwo)
+        expect(players[0].cards[1].color).toEqual(game.card.color)
+        const numberOfCardsOfPlayer1 = players[1].cards.length
+        players[0].playCard(players[0].cards[1])
+        players[0].endTurn()
+        const cardsToDraw = 2
+        expect(players[1].cards.length).toEqual(numberOfCardsOfPlayer1 + cardsToDraw)
+        expect(game.currentPlayer).toBe(players[0])
       })
     })
   })
@@ -131,10 +156,13 @@ describe('duo', () => {
           new Card(Symbol.Three, Color.Red)
         ]
         players[0].playCard(players[0].cards[0])
-        const numberOfCards = players[0].cards.length
+        const cardsToDraw = [
+          item(game.deck, -1),
+          item(game.deck, -2)
+        ]
         players[0].endTurn()
-        expect(players[0].cards.length)
-          .toEqual(numberOfCards + Game.NUMBER_OF_CARDS_TO_DRAW)
+        expect(item(players[0].cards, -2)).toBe(cardsToDraw[0])
+        expect(item(players[0].cards, -1)).toBe(cardsToDraw[1])
       },
     )
 

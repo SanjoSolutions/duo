@@ -1,9 +1,9 @@
 import Mock = jest.Mock
 
-jest.mock('./randomIndex')
+jest.mock('./randomIndex.js')
 
-import { randomIndex } from './randomIndex'
-import { spliceRandomItem } from './spliceRandomItem'
+import { randomIndex } from './randomIndex.js'
+import { spliceRandomItem } from './spliceRandomItem.js'
 
 describe('spliceRandomItem', () => {
   test('splices a random item', () => {

@@ -1,4 +1,4 @@
-import { remove } from './remove'
+import { remove } from './remove.js'
 
 describe('remove', () => {
   it('removes an item', () => {

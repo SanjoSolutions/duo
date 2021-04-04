@@ -1,4 +1,4 @@
-import { randomIndex } from './randomIndex'
+import { randomIndex } from './randomIndex.js'
 
 export function spliceRandomItem<T>(values: T[]): T {
   const index = randomIndex(values)

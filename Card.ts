@@ -1,5 +1,5 @@
-import { Color } from './Color'
-import { Symbol } from './Symbol'
+import { Color } from './Color.js'
+import { Symbol } from './Symbol.js'
 
 export class Card {
   symbol: Symbol

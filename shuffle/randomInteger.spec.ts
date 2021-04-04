@@ -1,5 +1,5 @@
-import { CLOSE_TO_MAXIMUM_RANDOM_RETURN_VALUE } from './closeToMaximumRandomReturnValue'
-import { randomInteger } from './randomInteger'
+import { CLOSE_TO_MAXIMUM_RANDOM_RETURN_VALUE } from './closeToMaximumRandomReturnValue.js'
+import { randomInteger } from './randomInteger.js'
 
 describe('randomInteger', () => {
   test('maximum value', () => {

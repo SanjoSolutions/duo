@@ -1,18 +1,22 @@
-jest.mock('./shuffle/shuffle')
+jest.mock('./shuffle/shuffle.js')
 
 import Mock = jest.Mock
 
-import { identity } from './function/identity'
-import { Game } from './Game'
-import { Player } from './Player'
-import { shuffle } from './shuffle/shuffle'
+import { Card } from './Card.js'
+import { identity } from './function/identity.js'
+import { Game } from './Game.js'
+import { Player } from './Player.js'
+import { shuffle } from './shuffle/shuffle.js'
 
 class Bot extends Player {
   notifyOnceTurn() {
-    this.playCard(this.pickCard())
+    const card = this.pickCard()
+    if (card) {
+      this.playCard(card)
+    }
   }
 
-  pickCard() {
+  pickCard(): Card | undefined {
     return this.cards.find(
       card => this._game.isCardPlayable(card)
     )
@@ -35,7 +39,7 @@ describe('bot', () => {
     game.initialize()
     game.start()
     expect(bot1.notifyOnceTurn).toHaveBeenCalled()
-    expect(bot1.playCard).toHaveBeenCalled()
+    expect(bot1.playCard).toHaveBeenCalledWith(expect.any(Card))
   })
 
   describe('pickCard', () => {

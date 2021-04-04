@@ -1,4 +1,4 @@
-import { spliceRandomItem } from './spliceRandomItem'
+import { spliceRandomItem } from './spliceRandomItem.js'
 
 export function shuffle<T>(values: T[]): T[] {
   const result = []
