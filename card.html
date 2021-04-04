@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title></title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="card.css">
+  <link rel="stylesheet" href="card-row.css">
+  <link rel="stylesheet" href="card-row-container.css">
+  <style>
+    body {
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100vw;
+      height: 100vh;
+    }
+
+    .game {
+      max-width: 951px;
+      max-height: 513px;
+    }
+
+    .card {
+      height: 3rem;
+      width: 2rem;
+      border-radius: 3px;
+      cursor: pointer;
+      font-size: 2rem;
+    }
+
+    .card-row .card {
+      margin-right: 0.5rem;
+    }
+
+    .card-row .card:last-child {
+      margin-right: 0;
+    }
+
+    .deck {
+      height: 3rem;
+      width: 2rem;
+      position: absolute;
+      top: calc(50% - 0.5 * 3rem);
+      left: calc(50% - 0.5 * 2rem);
+    }
+
+    .played-cards {
+      height: 3rem;
+      width: 2rem;
+      position: absolute;
+      top: calc(50% + 0.5 * 3rem);
+      left: calc(50% - 0.5 * 2rem);
+      border: 1px solid black;
+    }
+  </style>
+</head>
+<body>
+  <div class="game" style="width: 100vw; height: 100vh; position: relative;">
+    <div class="card-row-container" style="bottom: 0.5rem; left: 0; right: 0;">
+      <div class="card-row">
+        <div class="card card--green" draggable="true">1</div>
+        <div class="card card--yellow" draggable="true">2</div>
+        <div class="card card--red" draggable="true">3</div>
+        <div class="card card--green" draggable="true">4</div>
+        <div class="card card--wish-color" draggable="true"></div>
+      </div>
+    </div>
+
+    <div class="card-row-container card-row-container--2" style="left: 0.5rem; top: 0; bottom: 0;">
+      <div class="card-row" style="transform-origin: center center; transform: rotate(90deg);">
+        <div class="card card--green" draggable="true">1</div>
+        <div class="card card--yellow" draggable="true">2</div>
+        <div class="card card--red" draggable="true">3</div>
+        <div class="card card--green" draggable="true">4</div>
+        <div class="card card--wish-color" draggable="true"></div>
+      </div>
+    </div>
+
+    <div class="card-row-container" style="top: 0.5rem; left: 0; right: 0;">
+      <div class="card-row" style="transform-origin: center center; transform: rotate(180deg);">
+        <div class="card card--green" draggable="true">1</div>
+        <div class="card card--yellow" draggable="true">2</div>
+        <div class="card card--red" draggable="true">3</div>
+        <div class="card card--green" draggable="true">4</div>
+        <div class="card card--wish-color" draggable="true"></div>
+      </div>
+    </div>
+
+    <div class="card-row-container card-row-container--2" style="right: 0.5rem; top: 0; bottom: 0;">
+      <div class="card-row" style="transform-origin: center center; transform: rotate(270deg);">
+        <div class="card card--green" draggable="true">1</div>
+        <div class="card card--yellow" draggable="true">2</div>
+        <div class="card card--red" draggable="true">3</div>
+        <div class="card card--green" draggable="true">4</div>
+        <div class="card card--wish-color" draggable="true"></div>
+      </div>
+    </div>
+
+    <div class="deck">
+
+    </div>
+
+    <div class="played-cards">
+
+    </div>
+  </div>
+
+  <script>
+    const $game = document.querySelector('.game')
+    $game.addEventListener('dragstart', function (event) {
+      if (event.target.classList.contains('card')) {
+        event.dataTransfer.dropEffect = 'move';
+        event.dataTransfer.setData('text/html', event.target.outerHTML);
+      }
+    })
+    $game.addEventListener('dragend', function (event) {
+      if (
+        event.target.classList.contains('card') &&
+        event.dataTransfer.dropEffect === 'move'
+      ) {
+        event.target.remove()
+      }
+    })
+
+    const $playedCards = document.querySelector('.played-cards')
+    $playedCards.addEventListener('dragover', function (event) {
+      event.preventDefault();
+      event.dataTransfer.dropEffect = 'move'
+    })
+    $playedCards.addEventListener('drop', function (event) {
+      event.preventDefault();
+      const html = event.dataTransfer.getData('text/html')
+      $playedCards.innerHTML = html
+    })
+  </script>
+</body>
+</html>

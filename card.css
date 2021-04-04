@@ -26,5 +26,10 @@
 
 .card--green {
   background-color: green;
-  color: black;
+  color: white;
+}
+
+.card--wish-color {
+  background-color: black;
+  color: white;
 }

@@ -48,7 +48,7 @@ describe('bot', () => {
       const bot = new Bot(game)
       game.addPlayer(bot)
       game.initialize()
-      const card = bot.pickCard()
+      const card = bot.pickCard()!
       expect(game.isCardPlayable(card)).toEqual(true)
     })
   })

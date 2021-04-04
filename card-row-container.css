@@ -1,0 +1,15 @@
+.card-row-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  width: auto;
+  height: 54px;
+}
+
+.card-row-container--2 {
+  flex-direction: column;
+  width: 54px;
+  height: auto;
+}

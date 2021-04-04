@@ -129,6 +129,12 @@ describe('duo', () => {
         expect(game.currentPlayer).toBe(players[0])
       })
     })
+
+    describe('wünsch farbe karte', () => {
+      test('', () => {
+
+      })
+    })
   })
 
   describe('drawing a card', () => {
