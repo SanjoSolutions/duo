@@ -33,15 +33,15 @@ export class Game {
     return lastItem(this.playedCards);
   }
 
-  get currentPlayer() {
+  get currentPlayer(): Player {
     return this.players[this._currentPlayerIndex];
   }
 
-  get hasCurrentPlayerPlayedACard() {
+  get hasCurrentPlayerPlayedACard(): boolean {
     return this._hasCurrentPlayerPlayedACard;
   }
 
-  get hasCurrentPlayerSayedDuo() {
+  get hasCurrentPlayerSayedDuo(): boolean {
     return this._hasCurrentPlayerSayedDuo;
   }
 
@@ -55,35 +55,41 @@ export class Game {
     return deck;
   }
 
-  initialize() {
+  initialize(): void {
     this.deck = shuffle(this.deck);
     this._givePlayerCards();
     this._showFirstCard();
   }
 
-  start() {
+  start(): void {
     this.players[0].notifyOnceTurn();
   }
 
   private _givePlayerCards() {
     for (let count = 1; count <= 5; count++) {
       for (const player of this.players) {
-        const card = this.deck.pop()!;
+        const card = this.deck.pop();
+        if (!card) {
+          throw new Error("Deck seems empty");
+        }
         player.cards.push(card);
       }
     }
   }
 
   private _showFirstCard() {
-    const card = this.deck.pop()!;
+    const card = this.deck.pop();
+    if (!card) {
+      throw new Error("Deck seems empty");
+    }
     this.playedCards.push(card);
   }
 
-  addPlayer(player: Player) {
+  addPlayer(player: Player): void {
     this.players.push(player);
   }
 
-  playCard(card: Card) {
+  playCard(card: Card): void {
     if (this.isCardPlayable(card)) {
       remove(this.currentPlayer.cards, card);
       this.playedCards.push(card);
@@ -93,11 +99,11 @@ export class Game {
     }
   }
 
-  sayDuo() {
+  sayDuo(): void {
     this._hasCurrentPlayerSayedDuo = true;
   }
 
-  endTurn() {
+  endTurn(): void {
     if (!this.hasCurrentPlayerPlayedACard) {
       throw new Error();
     }
@@ -107,7 +113,15 @@ export class Game {
         Game.NUMBER_OF_CARDS_WHEN_TO_SAY_DUO &&
       !this.hasCurrentPlayerSayedDuo
     ) {
-      this.currentPlayer.cards.push(this.deck.pop()!, this.deck.pop()!);
+      const card1 = this.deck.pop();
+      if (!card1) {
+        throw new Error("Deck seems empty");
+      }
+      const card2 = this.deck.pop();
+      if (!card2) {
+        throw new Error("Deck seems empty");
+      }
+      this.currentPlayer.cards.push(card1, card2);
     }
 
     if (this.currentPlayer.cards.length === 0) {
@@ -117,7 +131,10 @@ export class Game {
 
       if (lastItem(this.playedCards).type === Type.DrawTwo) {
         for (let count = 1; count <= 2; count++) {
-          const card = this.deck.pop()!;
+          const card = this.deck.pop();
+          if (!card) {
+            throw new Error("Deck seems empty");
+          }
           this.currentPlayer.cards.push(card);
         }
         this._nextPlayer();
@@ -132,15 +149,18 @@ export class Game {
     this._hasCurrentPlayerSayedDuo = false;
   }
 
-  drawCard() {
+  drawCard(): Card {
     const drawnCard = this.deck.pop();
+    if (!drawnCard) {
+      throw new Error("Deck seems empty");
+    }
     if (this.deck.length === 0) {
       this._usePlayedCardsAsDeck();
     }
     return drawnCard;
   }
 
-  _usePlayedCardsAsDeck() {
+  _usePlayedCardsAsDeck(): void {
     const cards = shuffle(this.playedCards);
     this.playedCards = [];
     this.deck = cards;

@@ -10,17 +10,17 @@ export class Player {
     this.cards = [];
   }
 
-  notifyOnceTurn() {}
+  notifyOnceTurn(): void {}
 
-  playCard(card: Card) {
+  playCard(card: Card): void {
     this._game.playCard(card);
   }
 
-  sayDuo() {
+  sayDuo(): void {
     this._game.sayDuo();
   }
 
-  endTurn() {
+  endTurn(): void {
     this._game.endTurn();
   }
 }

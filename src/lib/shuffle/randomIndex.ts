@@ -1,5 +1,5 @@
 import { randomInteger } from "./randomInteger.js";
 
-export function randomIndex(values: any[]): number {
+export function randomIndex<T>(values: T[]): number {
   return randomInteger(0, values.length - 1);
 }

@@ -1,5 +1,7 @@
-export function values(enumeration: any): any[] {
+import { Enum } from "./Enum.js";
+
+export function values(enumeration: Enum): (string | number)[] {
   return Object.entries(enumeration)
     .filter(([key]) => Number.isNaN(Number(key)))
-    .map(([_, value]) => value);
+    .map((tuple) => tuple[1]);
 }
