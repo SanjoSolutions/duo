@@ -1,4 +1,4 @@
-jest.mock("./shuffle/shuffle.js");
+jest.mock("../lib/shuffle/shuffle.js");
 
 import Mock = jest.Mock;
 

@@ -1,6 +1,6 @@
 import Mock = jest.Mock;
 
-jest.mock("./shuffle/shuffle.js");
+jest.mock("../lib/shuffle/shuffle.js");
 
 import { item } from "../lib/array/item.js";
 import { lastItem } from "../lib/array/lastItem.js";
