@@ -1,3 +1,3 @@
 export function lastItem(values) {
-  return values[values.length - 1]
+  return values[values.length - 1];
 }

@@ -13,5 +13,5 @@ export enum Type {
   ReverseTurnOrder = 11,
   DrawTwo = 12,
   WishColor = 13,
-  WishColorAndDrawFour = 14
+  WishColorAndDrawFour = 14,
 }
