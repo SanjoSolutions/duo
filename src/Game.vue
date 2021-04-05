@@ -6,9 +6,16 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import { Game } from "./model/Game";
 
 export default defineComponent({
   name: "Game",
+  props: {
+    game: {
+      type: Game,
+      required: true
+    }
+  }
 });
 </script>
 

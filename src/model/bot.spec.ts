@@ -2,11 +2,11 @@ jest.mock("../lib/shuffle/shuffle.js");
 
 import Mock = jest.Mock;
 
-import { Card } from "./Card.js";
-import { identity } from "../lib/function/identity.js";
-import { Game } from "./Game.js";
-import { Player } from "./Player.js";
-import { shuffle } from "../lib/shuffle/shuffle.js";
+import { Card } from "./Card";
+import { identity } from "../lib/function/identity";
+import { Game } from "./Game";
+import { Player } from "./Player";
+import { shuffle } from "../lib/shuffle/shuffle";
 
 class Bot extends Player {
   notifyOnceTurn() {

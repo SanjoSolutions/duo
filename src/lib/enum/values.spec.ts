@@ -1,4 +1,4 @@
-import { values } from "./values.js";
+import { values } from "./values";
 
 describe("values", () => {
   it("returns the values of the enum", () => {

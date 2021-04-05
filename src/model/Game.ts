@@ -1,11 +1,11 @@
-import { lastItem } from "../lib/array/lastItem.js";
-import { remove } from "../lib/array/remove.js";
-import { Card } from "./Card.js";
-import { Color } from "./Color.js";
-import { values } from "../lib/enum/values.js";
-import { Player } from "./Player.js";
-import { shuffle } from "../lib/shuffle/shuffle.js";
-import { Type } from "./Type.js";
+import { lastItem } from "../lib/array/lastItem";
+import { remove } from "../lib/array/remove";
+import { Card } from "./Card";
+import { Color } from "./Color";
+import { values } from "../lib/enum/values";
+import { Player } from "./Player";
+import { shuffle } from "../lib/shuffle/shuffle";
+import { Type } from "./Type";
 
 export class Game {
   static NUMBER_OF_CARDS_WHEN_TO_SAY_DUO = 2;

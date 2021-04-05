@@ -1,4 +1,4 @@
-import { lastItem } from "./lastItem.js";
+import { lastItem } from "./lastItem";
 
 describe("lastItem", () => {
   it("returns the last item", () => {

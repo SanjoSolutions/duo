@@ -1,5 +1,5 @@
-import { Color } from "./Color.js";
-import { Type } from "./Type.js";
+import { Color } from "./Color";
+import { Type } from "./Type";
 
 export class Card {
   type: Type;

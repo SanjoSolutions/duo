@@ -1,4 +1,4 @@
-import { Enum } from "./Enum.js";
+import { Enum } from "./Enum";
 
 export function values(enumeration: Enum): (string | number)[] {
   return Object.entries(enumeration)

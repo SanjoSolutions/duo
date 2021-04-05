@@ -1,8 +1,8 @@
 jest.mock("./randomInteger.js");
 
 import Mock = jest.Mock;
-import { randomInteger } from "./randomInteger.js";
-import { shuffle } from "./shuffle.js";
+import { randomInteger } from "./randomInteger";
+import { shuffle } from "./shuffle";
 
 describe("shuffle", () => {
   it("shuffles", () => {

@@ -1,4 +1,6 @@
 import { createApp } from "vue";
-import Game from "./Game.vue";
+import GameComponent from "./Game.vue";
+import { Game } from "./model/Game";
 
-createApp(Game).mount("#app");
+const game = new Game();
+createApp(GameComponent, { game }).mount("#app");

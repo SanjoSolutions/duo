@@ -2,15 +2,15 @@ import Mock = jest.Mock;
 
 jest.mock("../lib/shuffle/shuffle.js");
 
-import { item } from "../lib/array/item.js";
-import { lastItem } from "../lib/array/lastItem.js";
-import { Card } from "./Card.js";
-import { Color } from "./Color.js";
-import { identity } from "../lib/function/identity.js";
-import { Game } from "./Game.js";
-import { Player } from "./Player.js";
-import { shuffle } from "../lib/shuffle/shuffle.js";
-import { Type } from "./Type.js";
+import { item } from "../lib/array/item";
+import { lastItem } from "../lib/array/lastItem";
+import { Card } from "./Card";
+import { Color } from "./Color";
+import { identity } from "../lib/function/identity";
+import { Game } from "./Game";
+import { Player } from "./Player";
+import { shuffle } from "../lib/shuffle/shuffle";
+import { Type } from "./Type";
 
 describe("duo", () => {
   beforeEach(() => {

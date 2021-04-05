@@ -1,4 +1,4 @@
-import { identity } from "./identity.js";
+import { identity } from "./identity";
 
 describe("identity", () => {
   test("returns the passed value", () => {

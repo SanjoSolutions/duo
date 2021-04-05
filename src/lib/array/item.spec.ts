@@ -1,4 +1,4 @@
-import { item } from "./item.js";
+import { item } from "./item";
 
 describe("item", () => {
   test("returns the item with the index. with negative index starting from right.", () => {
