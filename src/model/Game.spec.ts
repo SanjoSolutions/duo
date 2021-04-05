@@ -2,15 +2,15 @@ import Mock = jest.Mock
 
 jest.mock('./shuffle/shuffle.js')
 
-import { item } from './array/item.js'
-import { lastItem } from './array/lastItem.js'
+import { item } from '../lib/array/item.js'
+import { lastItem } from '../lib/array/lastItem.js'
 import { Card } from './Card.js'
 import { Color } from './Color.js'
-import { identity } from './function/identity.js'
+import { identity } from '../lib/function/identity.js'
 import { Game } from './Game.js'
 import { Player } from './Player.js'
-import { shuffle } from './shuffle/shuffle.js'
-import { Symbol } from './Symbol.js'
+import { shuffle } from '../lib/shuffle/shuffle.js'
+import { Type } from './Type.js'
 
 describe('duo', () => {
   beforeEach(() => {
@@ -52,39 +52,39 @@ describe('duo', () => {
       'it is allowed to play a card that matches in color with the current card',
       () => {
         const { game, players } = createGameWithTwoPlayers()
-        game.playedCards.push(new Card(Symbol.Two, Color.Red))
-        players[0].cards.push(new Card(Symbol.Three, Color.Red))
+        game.playedCards.push(new Card(Type.Two, Color.Red))
+        players[0].cards.push(new Card(Type.Three, Color.Red))
         expect(() => players[0].playCard(players[0].cards[0]))
           .not.toThrow()
       },
     )
 
     test(
-      'it is allowed to play a card that matches in symbol with the current card',
+      'it is allowed to play a card that matches in type with the current card',
       () => {
         const { game, players } = createGameWithTwoPlayers()
-        game.playedCards.push(new Card(Symbol.Two, Color.Red))
-        players[0].cards.push(new Card(Symbol.Two, Color.Green))
+        game.playedCards.push(new Card(Type.Two, Color.Red))
+        players[0].cards.push(new Card(Type.Two, Color.Green))
         expect(() => players[0].playCard(players[0].cards[0]))
           .not.toThrow()
       },
     )
 
     test(
-      'when a number card or a skip player, reverse turn order or draw two card is played that has a different symbol and a different color than the current card, an error is thrown',
+      'when a number card or a skip player, reverse turn order or draw two card is played that has a different type and a different color than the current card, an error is thrown',
       () => {
         const { game, players } = createGameWithTwoPlayers()
-        game.playedCards.push(new Card(Symbol.Two, Color.Red))
-        players[0].cards.push(new Card(Symbol.Three, Color.Green))
+        game.playedCards.push(new Card(Type.Two, Color.Red))
+        players[0].cards.push(new Card(Type.Three, Color.Green))
         expect(() => players[0].playCard(players[0].cards[0]))
-          .toThrow('Card must have same symbol or color.')
+          .toThrow('Card must have same type or color.')
       },
     )
 
     test('the played card is added to playedCards', () => {
       const { game, players } = createGameWithTwoPlayers()
-      game.playedCards.push(new Card(Symbol.Two, Color.Red))
-      const card = new Card(Symbol.Two, Color.Green)
+      game.playedCards.push(new Card(Type.Two, Color.Red))
+      const card = new Card(Type.Two, Color.Green)
       players[0].cards.push(card)
       players[0].playCard(players[0].cards[0])
       expect(lastItem(game.playedCards)).toBe(card)
@@ -96,8 +96,8 @@ describe('duo', () => {
 
       beforeEach(() => {
         game = createGameWithTwoPlayers().game
-        game.deck = [new Card(Symbol.One, Color.Red)]
-        playedCard = new Card(Symbol.Two, Color.Red)
+        game.deck = [new Card(Type.One, Color.Red)]
+        playedCard = new Card(Type.Two, Color.Red)
         game.playedCards = [playedCard]
         game.drawCard()
       })
@@ -119,7 +119,7 @@ describe('duo', () => {
       test('the next player draws two cards and then the turn ends for the player who draws two cards', () => {
         const { game, players } = createGameWithTwoPlayers()
         game.initialize()
-        expect(players[0].cards[1].symbol).toEqual(Symbol.DrawTwo)
+        expect(players[0].cards[1].type).toEqual(Type.DrawTwo)
         expect(players[0].cards[1].color).toEqual(game.card.color)
         const numberOfCardsOfPlayer1 = players[1].cards.length
         players[0].playCard(players[0].cards[1])
@@ -155,11 +155,11 @@ describe('duo', () => {
       'then the player has to draw two cards',
       () => {
         const { game, players } = createGameWithTwoPlayers()
-        game.playedCards.push(new Card(Symbol.One, Color.Red))
+        game.playedCards.push(new Card(Type.One, Color.Red))
         players[0].cards = [
-          new Card(Symbol.One, Color.Red),
-          new Card(Symbol.Two, Color.Red),
-          new Card(Symbol.Three, Color.Red)
+          new Card(Type.One, Color.Red),
+          new Card(Type.Two, Color.Red),
+          new Card(Type.Three, Color.Red)
         ]
         players[0].playCard(players[0].cards[0])
         const cardsToDraw = [
@@ -176,11 +176,11 @@ describe('duo', () => {
       'and ends the turn after saying "duo" ' +
       'then the player has as many cards as before ending the turn', () => {
       const { game, players } = createGameWithTwoPlayers()
-      game.playedCards.push(new Card(Symbol.One, Color.Red))
+      game.playedCards.push(new Card(Type.One, Color.Red))
       players[0].cards = [
-        new Card(Symbol.One, Color.Red),
-        new Card(Symbol.Two, Color.Red),
-        new Card(Symbol.Three, Color.Red)
+        new Card(Type.One, Color.Red),
+        new Card(Type.Two, Color.Red),
+        new Card(Type.Three, Color.Red)
       ]
       players[0].playCard(players[0].cards[0])
       players[0].sayDuo()
@@ -191,10 +191,10 @@ describe('duo', () => {
 
     test('the hasCurrentPlayerSayedDuo resets after endTurn', () => {
       const { game, players } = createGameWithTwoPlayers()
-      game.playedCards.push(new Card(Symbol.One, Color.Red))
+      game.playedCards.push(new Card(Type.One, Color.Red))
       players[0].cards.push(
-        new Card(Symbol.One, Color.Red),
-        new Card(Symbol.Two, Color.Red)
+        new Card(Type.One, Color.Red),
+        new Card(Type.Two, Color.Red)
       )
       players[0].playCard(players[0].cards[0])
       players[0].sayDuo()
@@ -223,10 +223,10 @@ describe('duo', () => {
       "it's the next player's turn",
       () => {
         const { game, players } = createGameWithTwoPlayers()
-        game.playedCards.push(new Card(Symbol.One, Color.Red))
+        game.playedCards.push(new Card(Type.One, Color.Red))
         players[0].cards.push(
-          new Card(Symbol.One, Color.Red),
-          new Card(Symbol.Two, Color.Red)
+          new Card(Type.One, Color.Red),
+          new Card(Type.Two, Color.Red)
         )
         players[0].playCard(players[0].cards[0])
         players[0].endTurn()
@@ -238,9 +238,9 @@ describe('duo', () => {
   describe('win condition', () => {
     test('when a player has 0 cards, they win', () => {
       const { game, players } = createGameWithTwoPlayers()
-      game.playedCards.push(new Card(Symbol.One, Color.Red))
+      game.playedCards.push(new Card(Type.One, Color.Red))
       players[0].cards.push(
-        new Card(Symbol.One, Color.Red)
+        new Card(Type.One, Color.Red)
       )
       players[0].playCard(players[0].cards[0])
       players[0].endTurn()

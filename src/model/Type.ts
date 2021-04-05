@@ -1,4 +1,4 @@
-export enum Symbol {
+export enum Type {
   Zero = 0,
   One = 1,
   Two = 2,

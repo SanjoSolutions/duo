@@ -1,11 +1,11 @@
-import { lastItem } from './array/lastItem.js'
-import { remove } from './array/remove.js'
+import { lastItem } from '../lib/array/lastItem.js'
+import { remove } from '../lib/array/remove.js'
 import { Card } from './Card.js'
 import { Color } from './Color.js'
-import { values } from './enum/values.js'
+import { values } from '../lib/enum/values.js'
 import { Player } from './Player.js'
-import { shuffle } from './shuffle/shuffle.js'
-import { Symbol } from './Symbol.js'
+import { shuffle } from '../lib/shuffle/shuffle.js'
+import { Type } from './Type.js'
 
 export class Game {
   static NUMBER_OF_CARDS_WHEN_TO_SAY_DUO = 2
@@ -48,8 +48,8 @@ export class Game {
   _createDeck(): Card[] {
     const deck = []
     for (const color of values(Color)) {
-      for (const symbol of values(Symbol)) {
-        deck.push(new Card(symbol, color))
+      for (const type of values(Type)) {
+        deck.push(new Card(type, color))
       }
     }
     return deck
@@ -89,7 +89,7 @@ export class Game {
       this.playedCards.push(card)
       this._hasCurrentPlayerPlayedACard = true
     } else {
-      throw new Error('Card must have same symbol or color.')
+      throw new Error('Card must have same type or color.')
     }
   }
 
@@ -117,7 +117,7 @@ export class Game {
     } else {
       this._nextPlayer()
 
-      if (lastItem(this.playedCards).symbol === Symbol.DrawTwo) {
+      if (lastItem(this.playedCards).type === Type.DrawTwo) {
         for (let count = 1; count <= 2; count++) {
           const card = this.deck.pop()!
           this.currentPlayer.cards.push(card)
@@ -149,7 +149,7 @@ export class Game {
 
   isCardPlayable(card: Card): boolean {
     return (
-      card.symbol === this.card.symbol ||
+      card.type === this.card.type ||
       card.color === this.card.color
     )
   }

@@ -3,10 +3,10 @@ jest.mock('./shuffle/shuffle.js')
 import Mock = jest.Mock
 
 import { Card } from './Card.js'
-import { identity } from './function/identity.js'
+import { identity } from '../lib/function/identity.js'
 import { Game } from './Game.js'
 import { Player } from './Player.js'
-import { shuffle } from './shuffle/shuffle.js'
+import { shuffle } from '../lib/shuffle/shuffle.js'
 
 class Bot extends Player {
   notifyOnceTurn() {
