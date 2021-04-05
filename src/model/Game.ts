@@ -49,7 +49,7 @@ export class Game {
     const deck = [];
     for (const color of values(Color)) {
       for (const type of values(Type)) {
-        deck.push(new Card(type, color));
+        deck.push(new Card(type as Type, color as Color));
       }
     }
     return deck;

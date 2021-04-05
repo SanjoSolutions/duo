@@ -5,6 +5,6 @@ module.exports = {
   },
   resolver: "jest-ts-webcompat-resolver",
   testMatch: [
-    "<rootDir>/src/**/*.spec.[jt]s?(x)"
+    "<rootDir>/tests/e2e/**/*.spec.[jt]s?(x)",
   ]
 }
