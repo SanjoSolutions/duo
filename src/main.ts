@@ -1,5 +1,5 @@
 import { createApp } from "vue";
-import GameComponent from "./Game.vue";
+import GameComponent from "./components/Game.vue";
 import { Game } from "./model/Game";
 
 const game = new Game();

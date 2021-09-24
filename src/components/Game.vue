@@ -6,7 +6,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { Game } from "./model/Game";
+import { Game } from "../model/Game";
 
 export default defineComponent({
   name: "Game",
