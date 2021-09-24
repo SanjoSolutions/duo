@@ -2,6 +2,8 @@ This work is devoted to God.
 
 # duo
 
+[Demo](https://sanjosolutions.github.io/duo/src/card.html)
+
 ## Project setup
 ```
 npm install
