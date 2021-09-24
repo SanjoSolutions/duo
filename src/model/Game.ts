@@ -129,7 +129,7 @@ export class Game {
     } else {
       this._nextPlayer();
 
-      if (lastItem(this.playedCards).type === Type.DrawTwo) {
+      if (lastItem(this.playedCards).type === Type.Draw2) {
         for (let count = 1; count <= 2; count++) {
           const card = this.deck.pop();
           if (!card) {

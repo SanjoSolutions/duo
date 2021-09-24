@@ -109,7 +109,7 @@ describe("duo", () => {
       test("the next player draws two cards and then the turn ends for the player who draws two cards", () => {
         const { game, players } = createGameWithTwoPlayers();
         game.initialize();
-        expect(players[0].cards[1].type).toEqual(Type.DrawTwo);
+        expect(players[0].cards[1].type).toEqual(Type.Draw2);
         expect(players[0].cards[1].color).toEqual(game.card.color);
         const numberOfCardsOfPlayer1 = players[1].cards.length;
         players[0].playCard(players[0].cards[1]);
