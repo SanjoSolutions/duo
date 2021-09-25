@@ -128,6 +128,51 @@ describe('duo', () => {
       })
     })
 
+    describe('reverse', () => {
+      describe('with 2 players', () => {
+        test('the next player is skipped', () => {
+          const { game, players } = createGameWithTwoPlayers()
+          setDeck(
+            {
+              players: [
+                [
+                  new Card(Type.Reverse, Color.Blue),
+                ],
+                [],
+              ],
+              startCard: new Card(Type.Zero, Color.Blue),
+            },
+          )
+          game.initialize()
+          players[0].playCard(players[0].cards[0])
+          players[0].endTurn()
+          expect(game.currentPlayer).toBe(players[0])
+        })
+      })
+
+      describe('with more than 2 players', () => {
+        test('reverses the players turn order', () => {
+          const { game, players } = createGameWithThreePlayers()
+          setDeck(
+            {
+              players: [
+                [
+                  new Card(Type.Reverse, Color.Blue),
+                ],
+                [],
+                [],
+              ],
+              startCard: new Card(Type.Zero, Color.Blue),
+            },
+          )
+          game.initialize()
+          players[0].playCard(players[0].cards[0])
+          players[0].endTurn()
+          expect(game.currentPlayer).toBe(players[2])
+        })
+      })
+    })
+
     describe('skip', () => {
       test('the next player is skipped', () => {
         const { game, players } = createGameWithTwoPlayers()
@@ -331,5 +376,17 @@ function createGameWithTwoPlayers() {
   const players = [playerA, playerB]
   game.addPlayer(playerA)
   game.addPlayer(playerB)
+  return { game, players }
+}
+
+function createGameWithThreePlayers() {
+  const game = new Game()
+  const playerA = new Player(game)
+  const playerB = new Player(game)
+  const playerC = new Player(game)
+  const players = [playerA, playerB, playerC]
+  game.addPlayer(playerA)
+  game.addPlayer(playerB)
+  game.addPlayer(playerC)
   return { game, players }
 }

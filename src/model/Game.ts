@@ -16,6 +16,7 @@ export class Game {
 
   players: Player[]
   _currentPlayerIndex: number
+  _nextPlayerDelta: number
   private _hasCurrentPlayerPlayedACard: boolean
   private _hasCurrentPlayerSayedDuo: boolean
   deck: Card[]
@@ -25,6 +26,7 @@ export class Game {
   constructor() {
     this.players = []
     this._currentPlayerIndex = 0
+    this._nextPlayerDelta = 1
     this._hasCurrentPlayerPlayedACard = false
     this._hasCurrentPlayerSayedDuo = false
     this.deck = createDeck()
@@ -125,11 +127,16 @@ export class Game {
     if (this.currentPlayer.cards.length === 0) {
       this.winner = this.currentPlayer
     } else {
-      this._nextPlayer()
-
       const lastPlayedCardType = lastItem(this.playedCards).type
       if (lastPlayedCardType === Type.Draw2) {
         this._drawCardsAndSkip(Game.NUMBER_OF_CARDS_TO_DRAW_FROM_DRAW_2)
+      } else if (lastPlayedCardType === Type.Reverse) {
+        if (this.players.length === 2) {
+          this._skipPlayer()
+        } else {
+          this._nextPlayerDelta *= -1
+          this._nextPlayer()
+        }
       } else if (lastPlayedCardType === Type.Skip) {
         this._skipPlayer()
       } else if (lastPlayedCardType === Type.WildDraw4) {
@@ -139,6 +146,7 @@ export class Game {
   }
 
   private _drawCardsAndSkip(numberOfCardsToDraw: number): void {
+    this._nextPlayer()
     for (let count = 1; count <= numberOfCardsToDraw; count++) {
       const card = this.deck.pop()
       if (!card) {
@@ -151,11 +159,15 @@ export class Game {
 
   private _skipPlayer() {
     this._nextPlayer()
+    this._nextPlayer()
   }
 
   private _nextPlayer() {
     this._currentPlayerIndex =
-      (this._currentPlayerIndex + 1) % this.players.length
+      (this._currentPlayerIndex + this._nextPlayerDelta) % this.players.length
+    if (this._currentPlayerIndex < 0) {
+      this._currentPlayerIndex += this.players.length
+    }
     this._hasCurrentPlayerPlayedACard = false
     this._hasCurrentPlayerSayedDuo = false
   }
