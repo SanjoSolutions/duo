@@ -121,14 +121,18 @@ export class Game {
       this.currentPlayer.cards.push(card1, card2)
     }
 
+
     if (this.currentPlayer.cards.length === 0) {
       this.winner = this.currentPlayer
     } else {
       this._nextPlayer()
 
-      if (lastItem(this.playedCards).type === Type.Draw2) {
+      const lastPlayedCardType = lastItem(this.playedCards).type
+      if (lastPlayedCardType === Type.Draw2) {
         this._drawCardsAndSkip(Game.NUMBER_OF_CARDS_TO_DRAW_FROM_DRAW_2)
-      } else if (lastItem(this.playedCards).type === Type.WildDraw4) {
+      } else if (lastPlayedCardType === Type.Skip) {
+        this._skipPlayer()
+      } else if (lastPlayedCardType === Type.WildDraw4) {
         this._drawCardsAndSkip(Game.NUMBER_OF_CARDS_TO_DRAW_FROM_WILD_DRAW_4)
       }
     }
@@ -142,6 +146,10 @@ export class Game {
       }
       this.currentPlayer.cards.push(card)
     }
+    this._skipPlayer()
+  }
+
+  private _skipPlayer() {
     this._nextPlayer()
   }
 

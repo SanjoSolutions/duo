@@ -128,6 +128,27 @@ describe('duo', () => {
       })
     })
 
+    describe('skip', () => {
+      test('the next player is skipped', () => {
+        const { game, players } = createGameWithTwoPlayers()
+        setDeck(
+          {
+            players: [
+              [
+                new Card(Type.Skip, Color.Blue),
+              ],
+              [],
+            ],
+            startCard: new Card(Type.Zero, Color.Blue),
+          },
+        )
+        game.initialize()
+        players[0].playCard(players[0].cards[0])
+        players[0].endTurn()
+        expect(game.currentPlayer).toBe(players[0])
+      })
+    })
+
     describe('wild card', () => {
       test('the player who plays the wild card has to pick a color with which the play is continued', () => {
         const { game, players } = createGameWithTwoPlayers()
