@@ -1,242 +1,254 @@
-import Mock = jest.Mock;
+import Mock = jest.Mock
 
-jest.mock("../lib/shuffle/shuffle.js");
+jest.mock('../lib/shuffle/shuffle.js')
 
-import { item } from "../lib/array/item";
-import { lastItem } from "../lib/array/lastItem";
-import { Card } from "./Card";
-import { Color } from "./Color";
-import { identity } from "../lib/function/identity";
-import { Game } from "./Game";
-import { Player } from "./Player";
-import { shuffle } from "../lib/shuffle/shuffle";
-import { Type } from "./Type";
+import { item } from '../lib/array/item'
+import { lastItem } from '../lib/array/lastItem'
+import { identity } from '../lib/function/identity'
+import { shuffle } from '../lib/shuffle/shuffle'
+import { Card } from './Card'
+import { Color } from './Color'
+import { createSetDeck } from './createSetDeck'
+import { Game } from './Game'
+import { Player } from './Player'
+import { Type } from './Type'
 
-describe("duo", () => {
+describe('duo', () => {
   beforeEach(() => {
-    (shuffle as Mock).mockImplementation(identity);
-  });
+    (shuffle as Mock).mockImplementation(identity)
+  })
 
-  describe("initialize", () => {
-    let game: Game;
+  describe('initialize', () => {
+    let game: Game
 
     beforeEach(() => {
-      game = createGameWithTwoPlayers().game;
-    });
+      game = createGameWithTwoPlayers().game
+    })
 
-    test("deck is shuffled", () => {
-      const deckBeforeShuffle = game.deck;
+    test('deck is shuffled', () => {
+      const deckBeforeShuffle = game.deck
       const shuffledDeck = Array.from(deckBeforeShuffle);
-      (shuffle as Mock).mockReturnValue(shuffledDeck);
-      game.initialize();
-      expect(shuffle).toHaveBeenCalledWith(deckBeforeShuffle);
-      expect(game.deck).toBe(shuffledDeck);
-    });
+      (shuffle as Mock).mockReturnValue(shuffledDeck)
+      game.initialize()
+      expect(shuffle).toHaveBeenCalledWith(deckBeforeShuffle)
+      expect(game.deck).toBe(shuffledDeck)
+    })
 
-    test("each player is given 5 cards", () => {
-      game.initialize();
+    test(`each player is given ${ Game.NUMBER_OF_CARDS_DEALT_TO_EACH_PLAYER } cards`, () => {
+      game.initialize()
       for (const player of game.players) {
-        expect(player.cards).toHaveLength(5);
+        expect(player.cards).toHaveLength(Game.NUMBER_OF_CARDS_DEALT_TO_EACH_PLAYER)
       }
-    });
+    })
 
-    test("a first card is shown", () => {
-      const { game } = createGameWithTwoPlayers();
-      game.initialize();
-      expect(game.card).toBeInstanceOf(Card);
-    });
-  });
+    test('a first card is shown', () => {
+      const { game } = createGameWithTwoPlayers()
+      game.initialize()
+      expect(game.card).toBeInstanceOf(Card)
+    })
+  })
 
-  describe("playing a card", () => {
-    test("it is allowed to play a card that matches in color with the current card", () => {
-      const { game, players } = createGameWithTwoPlayers();
-      game.playedCards.push(new Card(Type.Two, Color.Red));
-      players[0].cards.push(new Card(Type.Three, Color.Red));
-      expect(() => players[0].playCard(players[0].cards[0])).not.toThrow();
-    });
+  describe('playing a card', () => {
+    test('it is allowed to play a card that matches in color with the current card', () => {
+      const { game, players } = createGameWithTwoPlayers()
+      game.playedCards.push(new Card(Type.Two, Color.Red))
+      players[0].cards.push(new Card(Type.Three, Color.Red))
+      expect(() => players[0].playCard(players[0].cards[0])).not.toThrow()
+    })
 
-    test("it is allowed to play a card that matches in type with the current card", () => {
-      const { game, players } = createGameWithTwoPlayers();
-      game.playedCards.push(new Card(Type.Two, Color.Red));
-      players[0].cards.push(new Card(Type.Two, Color.Green));
-      expect(() => players[0].playCard(players[0].cards[0])).not.toThrow();
-    });
+    test('it is allowed to play a card that matches in type with the current card', () => {
+      const { game, players } = createGameWithTwoPlayers()
+      game.playedCards.push(new Card(Type.Two, Color.Red))
+      players[0].cards.push(new Card(Type.Two, Color.Green))
+      expect(() => players[0].playCard(players[0].cards[0])).not.toThrow()
+    })
 
-    test("when a number card or a skip player, reverse turn order or draw two card is played that has a different type and a different color than the current card, an error is thrown", () => {
-      const { game, players } = createGameWithTwoPlayers();
-      game.playedCards.push(new Card(Type.Two, Color.Red));
-      players[0].cards.push(new Card(Type.Three, Color.Green));
-      expect(() => players[0].playCard(players[0].cards[0])).toThrow(
-        "Card must have same type or color."
-      );
-    });
+    test(
+      'when a number card or a skip player, reverse turn order or draw two card is played that has a different type and a different color than the current card, an error is thrown',
+      () => {
+        const { game, players } = createGameWithTwoPlayers()
+        game.playedCards.push(new Card(Type.Two, Color.Red))
+        players[0].cards.push(new Card(Type.Three, Color.Green))
+        expect(() => players[0].playCard(players[0].cards[0])).toThrow(
+          'Card must have same type or color.',
+        )
+      },
+    )
 
-    test("the played card is added to playedCards", () => {
-      const { game, players } = createGameWithTwoPlayers();
-      game.playedCards.push(new Card(Type.Two, Color.Red));
-      const card = new Card(Type.Two, Color.Green);
-      players[0].cards.push(card);
-      players[0].playCard(players[0].cards[0]);
-      expect(lastItem(game.playedCards)).toBe(card);
-    });
+    test('the played card is added to playedCards', () => {
+      const { game, players } = createGameWithTwoPlayers()
+      game.playedCards.push(new Card(Type.Two, Color.Red))
+      const card = new Card(Type.Two, Color.Green)
+      players[0].cards.push(card)
+      players[0].playCard(players[0].cards[0])
+      expect(lastItem(game.playedCards)).toBe(card)
+    })
 
-    describe("when the deck has 0 cards left", () => {
-      let game: Game;
-      let playedCard: Card;
+    describe('when the deck has 0 cards left', () => {
+      let game: Game
+      let playedCard: Card
 
       beforeEach(() => {
-        game = createGameWithTwoPlayers().game;
-        game.deck = [new Card(Type.One, Color.Red)];
-        playedCard = new Card(Type.Two, Color.Red);
-        game.playedCards = [playedCard];
-        game.drawCard();
-      });
+        game = createGameWithTwoPlayers().game
+        game.deck = [new Card(Type.One, Color.Red)]
+        playedCard = new Card(Type.Two, Color.Red)
+        game.playedCards = [playedCard]
+        game.drawCard()
+      })
 
-      test("the played cards are shuffled", () => {
-        expect(shuffle).toHaveBeenCalledWith([playedCard]);
-      });
+      test('the played cards are shuffled', () => {
+        expect(shuffle).toHaveBeenCalledWith([playedCard])
+      })
 
-      test("the played cards are used as deck", () => {
-        expect(game.deck).toEqual([playedCard]);
-      });
+      test('the played cards are used as deck', () => {
+        expect(game.deck).toEqual([playedCard])
+      })
 
-      test("the played cards are reset", () => {
-        expect(game.playedCards).toHaveLength(0);
-      });
-    });
+      test('the played cards are reset', () => {
+        expect(game.playedCards).toHaveLength(0)
+      })
+    })
 
     describe('playing a "draw two" card', () => {
-      test("the next player draws two cards and then the turn ends for the player who draws two cards", () => {
+      test('the next player draws two cards and then the turn ends for the player who draws two cards', () => {
         const { game, players } = createGameWithTwoPlayers();
-        game.initialize();
-        expect(players[0].cards[1].type).toEqual(Type.Draw2);
-        expect(players[0].cards[1].color).toEqual(game.card.color);
-        const numberOfCardsOfPlayer1 = players[1].cards.length;
-        players[0].playCard(players[0].cards[1]);
-        players[0].endTurn();
-        const cardsToDraw = 2;
+        (shuffle as Mock).mockReturnValue(createSetDeck({
+          players: [
+            [
+              new Card(Type.Draw2, Color.Blue),
+            ],
+            [],
+          ],
+          startCard: new Card(Type.Zero, Color.Blue),
+        }))
+        game.initialize()
+        expect(players[0].cards[0].type).toEqual(Type.Draw2)
+        expect(players[0].cards[0].color).toEqual(game.card.color)
+        const numberOfCardsOfPlayer1 = players[1].cards.length
+        players[0].playCard(players[0].cards[0])
+        players[0].endTurn()
         expect(players[1].cards.length).toEqual(
-          numberOfCardsOfPlayer1 + cardsToDraw
-        );
-        expect(game.currentPlayer).toBe(players[0]);
-      });
-    });
+          numberOfCardsOfPlayer1 + Game.NUMBER_OF_CARDS_TO_DRAW,
+        )
+        expect(game.currentPlayer).toBe(players[0])
+      })
+    })
 
-    describe("wünsch farbe karte", () => {
-      test("", () => {});
-    });
-  });
+    describe('wünsch farbe karte', () => {
+      test('', () => {})
+    })
+  })
 
-  describe("drawing a card", () => {
-    it("removes the top card of the deck and returns the card", () => {
-      const game = new Game();
-      const topCard = lastItem(game.deck);
-      const deckLength = game.deck.length;
-      const drawnCard = game.drawCard();
-      expect(game.deck).toHaveLength(deckLength - 1);
-      expect(drawnCard).toEqual(topCard);
-    });
-  });
+  describe('drawing a card', () => {
+    it('removes the top card of the deck and returns the card', () => {
+      const game = new Game()
+      const topCard = lastItem(game.deck)
+      const deckLength = game.deck.length
+      const drawnCard = game.drawCard()
+      expect(game.deck).toHaveLength(deckLength - 1)
+      expect(drawnCard).toEqual(topCard)
+    })
+  })
 
   describe('"duo" game mechanic', () => {
     test(
-      "when a player has two cards left " +
-        'and ends the turn before the player says "duo" ' +
-        "then the player has to draw two cards",
+      'when a player has two cards left ' +
+      'and ends the turn before the player says "duo" ' +
+      'then the player has to draw two cards',
       () => {
-        const { game, players } = createGameWithTwoPlayers();
-        game.playedCards.push(new Card(Type.One, Color.Red));
+        const { game, players } = createGameWithTwoPlayers()
+        game.playedCards.push(new Card(Type.One, Color.Red))
         players[0].cards = [
           new Card(Type.One, Color.Red),
           new Card(Type.Two, Color.Red),
           new Card(Type.Three, Color.Red),
-        ];
-        players[0].playCard(players[0].cards[0]);
-        const cardsToDraw = [item(game.deck, -1), item(game.deck, -2)];
-        players[0].endTurn();
-        expect(item(players[0].cards, -2)).toBe(cardsToDraw[0]);
-        expect(item(players[0].cards, -1)).toBe(cardsToDraw[1]);
-      }
-    );
+        ]
+        players[0].playCard(players[0].cards[0])
+        const cardsToDraw = [item(game.deck, -1), item(game.deck, -2)]
+        players[0].endTurn()
+        expect(item(players[0].cards, -2)).toBe(cardsToDraw[0])
+        expect(item(players[0].cards, -1)).toBe(cardsToDraw[1])
+      },
+    )
 
     test(
-      "when the player, whose turn it is, has two cards left " +
-        'and ends the turn after saying "duo" ' +
-        "then the player has as many cards as before ending the turn",
+      'when the player, whose turn it is, has two cards left ' +
+      'and ends the turn after saying "duo" ' +
+      'then the player has as many cards as before ending the turn',
       () => {
-        const { game, players } = createGameWithTwoPlayers();
-        game.playedCards.push(new Card(Type.One, Color.Red));
+        const { game, players } = createGameWithTwoPlayers()
+        game.playedCards.push(new Card(Type.One, Color.Red))
         players[0].cards = [
           new Card(Type.One, Color.Red),
           new Card(Type.Two, Color.Red),
           new Card(Type.Three, Color.Red),
-        ];
-        players[0].playCard(players[0].cards[0]);
-        players[0].sayDuo();
-        const numberOfCards = players[0].cards.length;
-        players[0].endTurn();
-        expect(players[0].cards.length).toEqual(numberOfCards);
-      }
-    );
+        ]
+        players[0].playCard(players[0].cards[0])
+        players[0].sayDuo()
+        const numberOfCards = players[0].cards.length
+        players[0].endTurn()
+        expect(players[0].cards.length).toEqual(numberOfCards)
+      },
+    )
 
-    test("the hasCurrentPlayerSayedDuo resets after endTurn", () => {
-      const { game, players } = createGameWithTwoPlayers();
-      game.playedCards.push(new Card(Type.One, Color.Red));
+    test('the hasCurrentPlayerSayedDuo resets after endTurn', () => {
+      const { game, players } = createGameWithTwoPlayers()
+      game.playedCards.push(new Card(Type.One, Color.Red))
       players[0].cards.push(
         new Card(Type.One, Color.Red),
-        new Card(Type.Two, Color.Red)
-      );
-      players[0].playCard(players[0].cards[0]);
-      players[0].sayDuo();
-      players[0].endTurn();
-      expect(game.hasCurrentPlayerSayedDuo).toEqual(false);
-    });
-  });
+        new Card(Type.Two, Color.Red),
+      )
+      players[0].playCard(players[0].cards[0])
+      players[0].sayDuo()
+      players[0].endTurn()
+      expect(game.hasCurrentPlayerSayedDuo).toEqual(false)
+    })
+  })
 
-  describe("turn mechanic", () => {
-    describe("the player, which turn it is, has to play a card, before they can end the turn", () => {
-      test("when the player, which turn it is, ends the turn, before playing a card, endTurn throws an error", () => {
-        const { players } = createGameWithTwoPlayers();
+  describe('turn mechanic', () => {
+    describe('the player, which turn it is, has to play a card, before they can end the turn', () => {
+      test('when the player, which turn it is, ends the turn, before playing a card, endTurn throws an error', () => {
+        const { players } = createGameWithTwoPlayers()
 
-        expect(() => players[0].endTurn()).toThrow();
-      });
-    });
+        expect(() => players[0].endTurn()).toThrow()
+      })
+    })
 
     test(
-      "after the player, which turn it is, end the turn, " +
-        "it's the next player's turn",
+      'after the player, which turn it is, end the turn, ' +
+      'it\'s the next player\'s turn',
       () => {
-        const { game, players } = createGameWithTwoPlayers();
-        game.playedCards.push(new Card(Type.One, Color.Red));
+        const { game, players } = createGameWithTwoPlayers()
+        game.playedCards.push(new Card(Type.One, Color.Red))
         players[0].cards.push(
           new Card(Type.One, Color.Red),
-          new Card(Type.Two, Color.Red)
-        );
-        players[0].playCard(players[0].cards[0]);
-        players[0].endTurn();
-        expect(game.currentPlayer).toBe(players[1]);
-      }
-    );
-  });
+          new Card(Type.Two, Color.Red),
+        )
+        players[0].playCard(players[0].cards[0])
+        players[0].endTurn()
+        expect(game.currentPlayer).toBe(players[1])
+      },
+    )
+  })
 
-  describe("win condition", () => {
-    test("when a player has 0 cards, they win", () => {
-      const { game, players } = createGameWithTwoPlayers();
-      game.playedCards.push(new Card(Type.One, Color.Red));
-      players[0].cards.push(new Card(Type.One, Color.Red));
-      players[0].playCard(players[0].cards[0]);
-      players[0].endTurn();
-      expect(game.winner).toEqual(players[0]);
-    });
-  });
-});
+  describe('win condition', () => {
+    test('when a player has 0 cards, they win', () => {
+      const { game, players } = createGameWithTwoPlayers()
+      game.playedCards.push(new Card(Type.One, Color.Red))
+      players[0].cards.push(new Card(Type.One, Color.Red))
+      players[0].playCard(players[0].cards[0])
+      players[0].endTurn()
+      expect(game.winner).toEqual(players[0])
+    })
+  })
+})
 
 function createGameWithTwoPlayers() {
-  const game = new Game();
-  const playerA = new Player(game);
-  const playerB = new Player(game);
-  const players = [playerA, playerB];
-  game.addPlayer(playerA);
-  game.addPlayer(playerB);
-  return { game, players };
+  const game = new Game()
+  const playerA = new Player(game)
+  const playerB = new Player(game)
+  const players = [playerA, playerB]
+  game.addPlayer(playerA)
+  game.addPlayer(playerB)
+  return { game, players }
 }
