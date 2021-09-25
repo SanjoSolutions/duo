@@ -11,7 +11,8 @@ import { last } from '../unnamed/packages/array/src/last.js'
 export class Game {
   static NUMBER_OF_CARDS_DEALT_TO_EACH_PLAYER = 7
   static NUMBER_OF_CARDS_WHEN_TO_SAY_DUO = 2
-  static NUMBER_OF_CARDS_TO_DRAW = 2
+  static NUMBER_OF_CARDS_TO_DRAW_FROM_DRAW_2 = 2
+  static NUMBER_OF_CARDS_TO_DRAW_FROM_WILD_DRAW_4 = 4
 
   players: Player[]
   _currentPlayerIndex: number
@@ -126,16 +127,22 @@ export class Game {
       this._nextPlayer()
 
       if (lastItem(this.playedCards).type === Type.Draw2) {
-        for (let count = 1; count <= 2; count++) {
-          const card = this.deck.pop()
-          if (!card) {
-            throw new Error('Deck seems empty')
-          }
-          this.currentPlayer.cards.push(card)
-        }
-        this._nextPlayer()
+        this._drawCardsAndSkip(Game.NUMBER_OF_CARDS_TO_DRAW_FROM_DRAW_2)
+      } else if (lastItem(this.playedCards).type === Type.WildDraw4) {
+        this._drawCardsAndSkip(Game.NUMBER_OF_CARDS_TO_DRAW_FROM_WILD_DRAW_4)
       }
     }
+  }
+
+  private _drawCardsAndSkip(numberOfCardsToDraw: number): void {
+    for (let count = 1; count <= numberOfCardsToDraw; count++) {
+      const card = this.deck.pop()
+      if (!card) {
+        throw new Error('Deck seems empty')
+      }
+      this.currentPlayer.cards.push(card)
+    }
+    this._nextPlayer()
   }
 
   private _nextPlayer() {

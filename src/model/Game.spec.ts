@@ -122,7 +122,7 @@ describe('duo', () => {
         players[0].playCard(players[0].cards[0])
         players[0].endTurn()
         expect(players[1].cards.length).toEqual(
-          numberOfCardsOfPlayer1 + Game.NUMBER_OF_CARDS_TO_DRAW,
+          numberOfCardsOfPlayer1 + Game.NUMBER_OF_CARDS_TO_DRAW_FROM_DRAW_2,
         )
         expect(game.currentPlayer).toBe(players[0])
       })
@@ -148,6 +148,34 @@ describe('duo', () => {
         players[0].endTurn()
         expect(last(game.playedCards).color).toEqual(Color.Blue)
       })
+    })
+
+    describe('wild card draw 4', () => {
+      test(
+        'the player who plays the wild card draw 4 has to pick a color with hich the play is continued. the next player draws 4 cards.',
+        () => {
+          const { game, players } = createGameWithTwoPlayers()
+          setDeck(
+            {
+              players: [
+                [
+                  new Card(Type.WildDraw4),
+                ],
+                [],
+              ],
+              startCard: new Card(Type.Zero, Color.Blue),
+            },
+          )
+          game.initialize()
+          players[0].playCard(players[0].cards[0])
+          players[0].chooseColor(Color.Blue)
+          players[0].endTurn()
+          expect(last(game.playedCards).color).toEqual(Color.Blue)
+          expect(game.players[1].cards.length).toEqual(
+            Game.NUMBER_OF_CARDS_DEALT_TO_EACH_PLAYER + Game.NUMBER_OF_CARDS_TO_DRAW_FROM_WILD_DRAW_4,
+          )
+        },
+      )
     })
   })
 
