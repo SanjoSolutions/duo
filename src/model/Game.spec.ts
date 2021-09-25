@@ -64,7 +64,7 @@ describe('duo', () => {
     })
 
     test(
-      'when a number card or a skip player, reverse turn order or draw two card is played that has a different type and a different color than the current card, an error is thrown',
+      'when a number card or a skip, reverse or draw 2 card is played that has a different type and a different color than the current card, an error is thrown',
       () => {
         const { game, players } = createGameWithTwoPlayers()
         game.playedCards.push(new Card(Type.Two, Color.Red))
@@ -85,27 +85,18 @@ describe('duo', () => {
     })
 
     describe('when the deck has 0 cards left', () => {
-      let game: Game
-      let playedCard: Card
-
-      beforeEach(() => {
-        game = createGameWithTwoPlayers().game
+      test('all but the last played card are put into the deck and the deck is shuffled', () => {
+        const game = createGameWithTwoPlayers().game
         game.deck = [new Card(Type.One, Color.Red)]
-        playedCard = new Card(Type.Two, Color.Red)
-        game.playedCards = [playedCard]
+        const playedCards = [
+          new Card(Type.Two, Color.Red),
+          new Card(Type.Three, Color.Red),
+        ]
+        game.playedCards = playedCards
         game.drawCard()
-      })
-
-      test('the played cards are shuffled', () => {
-        expect(shuffle).toHaveBeenCalledWith([playedCard])
-      })
-
-      test('the played cards are used as deck', () => {
-        expect(game.deck).toEqual([playedCard])
-      })
-
-      test('the played cards are reset', () => {
-        expect(game.playedCards).toHaveLength(0)
+        const cardsThatShouldBePutBackIntoTheDeck = playedCards.slice(0, playedCards.length - 1)
+        expect(game.deck).toEqual(cardsThatShouldBePutBackIntoTheDeck)
+        expect(shuffle).toHaveBeenCalledWith(cardsThatShouldBePutBackIntoTheDeck)
       })
     })
 

@@ -5,6 +5,7 @@ import { Card } from './Card'
 import { createDeck } from './createDeck'
 import { Player } from './Player'
 import { Type } from './Type'
+import { last } from '../unnamed/packages/array/src/last.js'
 
 export class Game {
   static NUMBER_OF_CARDS_DEALT_TO_EACH_PLAYER = 7
@@ -151,8 +152,8 @@ export class Game {
   }
 
   _usePlayedCardsAsDeck(): void {
-    const cards = shuffle(this.playedCards)
-    this.playedCards = []
+    const cards = shuffle(this.playedCards.slice(0, this.playedCards.length - 1))
+    this.playedCards = [last(this.playedCards)]
     this.deck = cards
   }
 
