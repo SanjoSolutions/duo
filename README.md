@@ -1,12 +1,13 @@
-This work is devoted to God.
-
 # duo
+
+This work is devoted to God.
 
 [Demo](https://sanjosolutions.github.io/duo/src/card.html)
 
 [Instruction sheet for Uno®](https://service.mattel.com/instruction_sheets/42001pr.pdf)
 
 ## Project setup
+
 ```
 npm install
 ```
