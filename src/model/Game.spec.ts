@@ -134,7 +134,7 @@ describe('duo', () => {
       })
     })
 
-    describe('wünsch farbe karte', () => {
+    describe('wild card', () => {
       test('', () => {})
     })
   })
