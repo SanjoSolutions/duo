@@ -6,11 +6,12 @@ import { item } from '../lib/array/item'
 import { lastItem } from '../lib/array/lastItem'
 import { identity } from '../lib/function/identity'
 import { shuffle } from '../lib/shuffle/shuffle'
+import { last } from '../unnamed/packages/array/src/last'
 import { Card } from './Card'
 import { Color } from './Color'
-import { createSetDeck } from './createSetDeck'
 import { Game } from './Game'
 import { Player } from './Player'
+import { setDeck } from './setDeck'
 import { Type } from './Type'
 
 describe('duo', () => {
@@ -102,16 +103,18 @@ describe('duo', () => {
 
     describe('playing a "draw two" card', () => {
       test('the next player draws two cards and then the turn ends for the player who draws two cards', () => {
-        const { game, players } = createGameWithTwoPlayers();
-        (shuffle as Mock).mockReturnValue(createSetDeck({
-          players: [
-            [
-              new Card(Type.Draw2, Color.Blue),
+        const { game, players } = createGameWithTwoPlayers()
+        setDeck(
+          {
+            players: [
+              [
+                new Card(Type.Draw2, Color.Blue),
+              ],
+              [],
             ],
-            [],
-          ],
-          startCard: new Card(Type.Zero, Color.Blue),
-        }))
+            startCard: new Card(Type.Zero, Color.Blue),
+          },
+        )
         game.initialize()
         expect(players[0].cards[0].type).toEqual(Type.Draw2)
         expect(players[0].cards[0].color).toEqual(game.card.color)
@@ -126,7 +129,25 @@ describe('duo', () => {
     })
 
     describe('wild card', () => {
-      test('', () => {})
+      test('the player who plays the wild card has to pick a color with which the play is continued', () => {
+        const { game, players } = createGameWithTwoPlayers()
+        setDeck(
+          {
+            players: [
+              [
+                new Card(Type.Wild),
+              ],
+              [],
+            ],
+            startCard: new Card(Type.Zero, Color.Blue),
+          },
+        )
+        game.initialize()
+        players[0].playCard(players[0].cards[0])
+        players[0].chooseColor(Color.Blue)
+        players[0].endTurn()
+        expect(last(game.playedCards).color).toEqual(Color.Blue)
+      })
     })
   })
 
@@ -230,6 +251,26 @@ describe('duo', () => {
       players[0].playCard(players[0].cards[0])
       players[0].endTurn()
       expect(game.winner).toEqual(players[0])
+    })
+  })
+
+  describe('isCardPlayable', () => {
+    it('returns true when the card has the same color as the last played card', () => {
+      const game = new Game()
+      game.playedCards.push(new Card(Type.Zero, Color.Blue))
+      expect(game.isCardPlayable(new Card(Type.One, Color.Blue))).toEqual(true)
+    })
+
+    it('returns true when the card has the same type as the last played card', () => {
+      const game = new Game()
+      game.playedCards.push(new Card(Type.Zero, Color.Blue))
+      expect(game.isCardPlayable(new Card(Type.Zero, Color.Red))).toEqual(true)
+    })
+
+    it('returns true when the card is a colorless card', () => {
+      const game = new Game()
+      game.playedCards.push(new Card(Type.Zero, Color.Blue))
+      expect(game.isCardPlayable(new Card(Type.Wild))).toEqual(true)
     })
   })
 })

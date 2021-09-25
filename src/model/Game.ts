@@ -2,6 +2,7 @@ import { lastItem } from '../lib/array/lastItem'
 import { remove } from '../lib/array/remove'
 import { shuffle } from '../lib/shuffle/shuffle'
 import { Card } from './Card'
+import { Color } from './Color'
 import { createDeck } from './createDeck'
 import { Player } from './Player'
 import { Type } from './Type'
@@ -90,6 +91,10 @@ export class Game {
     }
   }
 
+  chooseColor(color: Color): void {
+    last(this.playedCards).color = color
+  }
+
   sayDuo(): void {
     this._hasCurrentPlayerSayedDuo = true
   }
@@ -158,6 +163,11 @@ export class Game {
   }
 
   isCardPlayable(card: Card): boolean {
-    return card.type === this.card.type || card.color === this.card.color
+    const lastPlayedCard = last(this.playedCards)
+    return (
+      card.type === lastPlayedCard.type ||
+      card.color === lastPlayedCard.color ||
+      card.color === undefined
+    )
   }
 }
